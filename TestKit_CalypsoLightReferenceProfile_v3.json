@@ -1,0 +1,240 @@
+{
+  "id": "TestKit_CalypsoLightReferenceProfile_v3.json",
+  "version": 3,
+  "applicationList": [
+    {
+      "calypsoRevision": "LIGHT",
+      "aid": "A000000291FF9111",
+      "applicationType": "90",
+      "applicationSubtype": "31",
+      "accessConditions": {
+        "group0": {
+          "accessCondition": "10",
+          "keyLevel": "01"
+        },
+        "group1": {
+          "accessCondition": "10",
+          "keyLevel": "03"
+        },
+        "group2": {
+          "accessCondition": "00",
+          "keyLevel": "00"
+        },
+        "group3": {
+          "accessCondition": "00",
+          "keyLevel": "00"
+        }
+      },
+      "status": "00",
+      "kif1": "21",
+      "kif2": "27",
+      "kif3": "30",
+      "kvc1": "79",
+      "kvc2": "79",
+      "kvc3": "79",
+      "lid": "2000",
+      "fileList": [
+        {
+          "sfi": "14",
+          "lid": "2014",
+          "efType": "02",
+          "recSize": "0020",
+          "numRec": "01",
+          "accessConditions": {
+            "group0": {
+              "accessCondition": "1F",
+              "keyLevel": "00"
+            },
+            "group1": {
+              "accessCondition": "10",
+              "keyLevel": "01"
+            },
+            "group2": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            },
+            "group3": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            }
+          }
+        },
+        {
+          "sfi": "15",
+          "lid": "2015",
+          "efType": "02",
+          "recSize": "0040",
+          "numRec": "02",
+          "accessConditions": {
+            "group0": {
+              "accessCondition": "1F",
+              "keyLevel": "00"
+            },
+            "group1": {
+              "accessCondition": "10",
+              "keyLevel": "02"
+            },
+            "group2": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            },
+            "group3": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            }
+          }
+        },
+        {
+          "sfi": "1A",
+          "lid": "201A",
+          "efType": "02",
+          "recSize": "0030",
+          "numRec": "02",
+          "accessConditions": {
+            "group0": {
+              "accessCondition": "1F",
+              "keyLevel": "00"
+            },
+            "group1": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            },
+            "group2": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            },
+            "group3": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            }
+          }
+        },
+        {
+          "sfi": "1B",
+          "lid": "201B",
+          "efType": "09",
+          "recSize": "0006",
+          "numRec": "01",
+          "accessConditions": {
+            "group0": {
+              "accessCondition": "1F",
+              "keyLevel": "00"
+            },
+            "group1": {
+              "accessCondition": "10",
+              "keyLevel": "02"
+            },
+            "group2": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            },
+            "group3": {
+              "accessCondition": "10",
+              "keyLevel": "02"
+            }
+          }
+        },
+        {
+          "sfi": "1C",
+          "lid": "201C",
+          "efType": "09",
+          "recSize": "0006",
+          "numRec": "01",
+          "accessConditions": {
+            "group0": {
+              "accessCondition": "1F",
+              "keyLevel": "00"
+            },
+            "group1": {
+              "accessCondition": "10",
+              "keyLevel": "02"
+            },
+            "group2": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            },
+            "group3": {
+              "accessCondition": "10",
+              "keyLevel": "02"
+            }
+          }
+        },
+        {
+          "sfi": "09",
+          "lid": "2009",
+          "efType": "02",
+          "recSize": "0040",
+          "numRec": "02",
+          "accessConditions": {
+            "group0": {
+              "accessCondition": "1F",
+              "keyLevel": "00"
+            },
+            "group1": {
+              "accessCondition": "10",
+              "keyLevel": "02"
+            },
+            "group2": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            },
+            "group3": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            }
+          }
+        },
+        {
+          "sfi": "08",
+          "lid": "2008",
+          "efType": "04",
+          "recSize": "0040",
+          "numRec": "02",
+          "accessConditions": {
+            "group0": {
+              "accessCondition": "1F",
+              "keyLevel": "00"
+            },
+            "group1": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            },
+            "group2": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            },
+            "group3": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            }
+          }
+        },
+        {
+          "sfi": "1E",
+          "lid": "201E",
+          "efType": "04",
+          "recSize": "0040",
+          "numRec": "02",
+          "accessConditions": {
+            "group0": {
+              "accessCondition": "1F",
+              "keyLevel": "00"
+            },
+            "group1": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            },
+            "group2": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            },
+            "group3": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

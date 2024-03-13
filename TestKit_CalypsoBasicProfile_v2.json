@@ -1,0 +1,165 @@
+{
+  "id": "TestKit_CalypsoBasicProfile_v2.json",
+  "version": 2,
+  "applicationList": [
+    {
+      "calypsoRevision": "BASIC",
+      "aid": "A000000291FF9101",
+      "applicationType": "98",
+      "applicationSubtype": "33",
+      "accessConditions": {
+        "group0": {
+          "accessCondition": "00",
+          "keyLevel": "00"
+        },
+        "group1": {
+          "accessCondition": "10",
+          "keyLevel": "03"
+        },
+        "group2": {
+          "accessCondition": "00",
+          "keyLevel": "00"
+        },
+        "group3": {
+          "accessCondition": "00",
+          "keyLevel": "00"
+        }
+      },
+      "status": "00",
+      "kif1": "21",
+      "kif2": "27",
+      "kif3": "30",
+      "kvc1": "73",
+      "kvc2": "73",
+      "kvc3": "73",
+      "lid": "2000",
+      "fileList": [
+        {
+          "sfi": "07",
+          "lid": "2001",
+          "efType": "02",
+          "recSize": "001D",
+          "numRec": "01",
+          "accessConditions": {
+            "group0": {
+              "accessCondition": "1F",
+              "keyLevel": "00"
+            },
+            "group1": {
+              "accessCondition": "10",
+              "keyLevel": "01"
+            },
+            "group2": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            },
+            "group3": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            }
+          }
+        },
+        {
+          "sfi": "08",
+          "lid": "2010",
+          "efType": "04",
+          "recSize": "001D",
+          "numRec": "02",
+          "accessConditions": {
+            "group0": {
+              "accessCondition": "1F",
+              "keyLevel": "00"
+            },
+            "group1": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            },
+            "group2": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            },
+            "group3": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            }
+          }
+        },
+        {
+          "sfi": "1E",
+          "lid": "2050",
+          "efType": "02",
+          "recSize": "001D",
+          "numRec": "01",
+          "accessConditions": {
+            "group0": {
+              "accessCondition": "1F",
+              "keyLevel": "00"
+            },
+            "group1": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            },
+            "group2": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            },
+            "group3": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            }
+          }
+        },
+        {
+          "sfi": "09",
+          "lid": "2020",
+          "efType": "02",
+          "recSize": "001D",
+          "numRec": "01",
+          "accessConditions": {
+            "group0": {
+              "accessCondition": "1F",
+              "keyLevel": "00"
+            },
+            "group1": {
+              "accessCondition": "10",
+              "keyLevel": "02"
+            },
+            "group2": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            },
+            "group3": {
+              "accessCondition": "00",
+              "keyLevel": "00"
+            }
+          }
+        },
+        {
+          "sfi": "19",
+          "lid": "2069",
+          "efType": "09",
+          "recSize": "0003",
+          "numRec": "01",
+          "accessConditions": {
+            "group0": {
+              "accessCondition": "1F",
+              "keyLevel": "00"
+            },
+            "group1": {
+              "accessCondition": "10",
+              "keyLevel": "02"
+            },
+            "group2": {
+              "accessCondition": "10",
+              "keyLevel": "03"
+            },
+            "group3": {
+              "accessCondition": "10",
+              "keyLevel": "02"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

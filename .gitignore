@@ -1,0 +1,6 @@
+/.idea/
+/.gradle/
+/build/
+/*_PoData_*.json
+/*_CardData_*.json
+/LICENSE_HEADER
