@@ -224,8 +224,7 @@ public class Tool_AnalyzeCardFileStructure {
 
     smartCardService.checkCardExtension(calypsoCardService);
 
-    String pcscContactlessCardReaderName =
-        ToolUtils.getCardReaderName(plugin, readerNameRegex);
+    String pcscContactlessCardReaderName = ToolUtils.getCardReaderName(plugin, readerNameRegex);
     cardReader = plugin.getReader(pcscContactlessCardReaderName);
 
     plugin

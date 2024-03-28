@@ -30,7 +30,8 @@ public class ToolUtils {
   public static final String SEPARATOR_LINE =
       "========================================================================================================";
 
-  public static final String DEFAULT_CARD_READER_NAME_REGEX = ".*(ASK.*|Identiv.*2|ACS ACR122U|SCR3310).*";
+  public static final String DEFAULT_CARD_READER_NAME_REGEX =
+      ".*(ASK.*|Identiv.*2|ACS ACR122U|SCR3310).*";
   public static final String ISO_CARD_PROTOCOL = "ISO_14443_4_CARD";
   public static final String SAM_READER_NAME_REGEX =
       ".*(Cherry TC|Identiv.*|SCM Microsystems|HID|Generic|ACS).*";

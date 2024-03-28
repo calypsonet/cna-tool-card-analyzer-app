@@ -238,7 +238,8 @@ public class Tool_CheckCardFileStructure {
   public static void main(String[] args) {
 
     if (args.length < 1 || args.length > 2) {
-      logger.error("Usage: java -jar Tool_CheckCardFileStructure.jar <path-to-json-file> [readerNameRegex]");
+      logger.error(
+          "Usage: java -jar Tool_CheckCardFileStructure.jar <path-to-json-file> [readerNameRegex]");
       return;
     }
 
