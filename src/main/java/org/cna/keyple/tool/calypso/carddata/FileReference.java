@@ -11,23 +11,29 @@
  ************************************************************************************** */
 package org.cna.keyple.tool.calypso.carddata;
 
+/**
+ * Contains information about a file: the LID, the linked file LID, the reference value read, and a
+ * flag indicating whether the reference has been found.
+ *
+ * @since 2.0.0
+ */
 public class FileReference {
 
-  private String baseFileLid;
+  private final String baseFileLid;
 
-  private String linkedFileLid;
+  private final String linkedFileLid;
 
-  private String refValueRead;
+  private final String refValueRead;
 
-  private Boolean referenceFoundFlag;
+  private boolean referenceFoundFlag;
 
   public FileReference(String baseLid, String linkedLid, String refValue) {
 
-    this.baseFileLid = new String(baseLid);
+    this.baseFileLid = baseLid;
 
-    this.linkedFileLid = new String(linkedLid);
+    this.linkedFileLid = linkedLid;
 
-    this.refValueRead = new String(refValue);
+    this.refValueRead = refValue;
 
     this.referenceFoundFlag = false;
   }
@@ -44,11 +50,11 @@ public class FileReference {
     return refValueRead;
   }
 
-  public Boolean getReferenceFoundFlag() {
+  public boolean getReferenceFoundFlag() {
     return referenceFoundFlag;
   }
 
-  public void setReferenceFoundFlag(Boolean referenceFoundFlag) {
+  public void setReferenceFoundFlag(boolean referenceFoundFlag) {
     this.referenceFoundFlag = referenceFoundFlag;
   }
 }

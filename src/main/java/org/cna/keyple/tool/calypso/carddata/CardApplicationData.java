@@ -11,29 +11,36 @@
  ************************************************************************************** */
 package org.cna.keyple.tool.calypso.carddata;
 
+import static org.cna.keyple.tool.calypso.common.ToolUtils.SEPARATOR_LINE;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import org.calypsonet.terminal.calypso.WriteAccessLevel;
-import org.calypsonet.terminal.calypso.card.CalypsoCard;
 import org.cna.keyple.tool.calypso.common.ToolUtils;
+import org.eclipse.keyple.core.util.ByteArrayUtil;
 import org.eclipse.keyple.core.util.HexUtil;
+import org.eclipse.keypop.calypso.card.WriteAccessLevel;
+import org.eclipse.keypop.calypso.card.card.CalypsoCard;
 import org.slf4j.Logger;
 
+/**
+ * All data related to a card application.
+ *
+ * @since 2.0.0
+ */
 public class CardApplicationData {
 
-  public class Issuer {
+  public static class Issuer {
 
-    private String value;
+    private final String value;
 
-    private String name;
+    private final String name;
 
     public Issuer(byte inValue) {
 
-      value = String.format("%02X", inValue);
+      value = HexUtil.toHex(inValue);
 
-      name = new String(ToolUtils.getIssuerName(inValue));
+      name = ToolUtils.getIssuerName(inValue);
     }
 
     public String getValue() {
@@ -45,55 +52,55 @@ public class CardApplicationData {
     }
   }
 
-  private byte[] fci;
+  private final byte[] fci;
 
-  private String calypsoRevision;
+  private final String calypsoRevision;
 
-  private byte[] aid;
+  private final byte[] aid;
 
-  private byte[] csn;
+  private final byte[] csn;
 
-  private long csnDec;
+  private final long csnDec;
 
-  private String sessionModif;
+  private final String sessionModif;
 
-  private int sessionModifDec;
+  private final int sessionModifDec;
 
-  private int bufferSize;
+  private final int bufferSize;
 
-  private String platform;
+  private final String platform;
 
-  private String applicationType;
+  private final String applicationType;
 
-  private String applicationSubtype;
+  private final String applicationSubtype;
 
-  private Issuer issuer;
+  private final Issuer issuer;
 
-  private String version;
+  private final String version;
 
-  private String revision;
+  private final String revision;
 
-  private String transactionCounter;
+  private final String transactionCounter;
 
-  private long transactionCounterDec;
+  private final long transactionCounterDec;
 
-  private AccessConditions accessConditions;
+  private final AccessConditions accessConditions;
 
-  private String status;
+  private final String status;
 
-  private String kif1;
+  private final String kif1;
 
-  private String kif2;
+  private final String kif2;
 
-  private String kif3;
+  private final String kif3;
 
-  private String kvc1;
+  private final String kvc1;
 
-  private String kvc2;
+  private final String kvc2;
 
-  private String kvc3;
+  private final String kvc3;
 
-  private String lid;
+  private final String lid;
 
   List<CardFileData> fileList = null;
 
@@ -141,11 +148,11 @@ public class CardApplicationData {
         Arrays.copyOf(
             appData.getApplicationSerialNumber(), appData.getApplicationSerialNumber().length);
 
-    csnDec = ToolUtils.bytesToLong(appData.getApplicationSerialNumber(), 8);
+    csnDec = ByteArrayUtil.extractLong(appData.getApplicationSerialNumber(), 0, 8, false);
 
-    calypsoRevision = new String(appData.getProductType().toString());
+    calypsoRevision = appData.getProductType().toString();
 
-    sessionModif = String.format("%04X", appData.getSessionModification());
+    sessionModif = ToolUtils.padLeft(HexUtil.toHex(appData.getSessionModification()), 4, '0');
 
     sessionModifDec = appData.getSessionModification();
 
@@ -155,13 +162,13 @@ public class CardApplicationData {
 
     transactionCounterDec = 0; // appData.getTransactionCounter();
 
-    platform = String.format("%02X", appData.getPlatform());
+    platform = HexUtil.toHex(appData.getPlatform());
 
     issuer = new Issuer(appData.getSoftwareIssuer());
 
-    version = String.format("%02X", appData.getSoftwareVersion());
+    version = HexUtil.toHex(appData.getSoftwareVersion());
 
-    revision = String.format("%02X", appData.getSoftwareRevision());
+    revision = HexUtil.toHex(appData.getSoftwareRevision());
 
     fci =
         Arrays.copyOf(
@@ -169,111 +176,96 @@ public class CardApplicationData {
 
     aid = Arrays.copyOf(appData.getDfName(), appData.getDfName().length);
 
-    lid = String.format("%04X", appData.getDirectoryHeader().getLid());
+    lid = HexUtil.toHex(appData.getDirectoryHeader().getLid());
 
-    kif1 =
-        String.format(
-            "%02X", appData.getDirectoryHeader().getKif(WriteAccessLevel.PERSONALIZATION));
+    kif1 = HexUtil.toHex(appData.getDirectoryHeader().getKif(WriteAccessLevel.PERSONALIZATION));
+    kif2 = HexUtil.toHex(appData.getDirectoryHeader().getKif(WriteAccessLevel.LOAD));
+    kif3 = HexUtil.toHex(appData.getDirectoryHeader().getKif(WriteAccessLevel.DEBIT));
 
-    kif2 = String.format("%02X", appData.getDirectoryHeader().getKif(WriteAccessLevel.LOAD));
+    kvc1 = HexUtil.toHex(appData.getDirectoryHeader().getKvc(WriteAccessLevel.PERSONALIZATION));
+    kvc2 = HexUtil.toHex(appData.getDirectoryHeader().getKvc(WriteAccessLevel.LOAD));
+    kvc3 = HexUtil.toHex(appData.getDirectoryHeader().getKvc(WriteAccessLevel.DEBIT));
 
-    kif3 = String.format("%02X", appData.getDirectoryHeader().getKif(WriteAccessLevel.DEBIT));
-
-    kvc1 =
-        String.format(
-            "%02X", appData.getDirectoryHeader().getKvc(WriteAccessLevel.PERSONALIZATION));
-
-    kvc2 = String.format("%02X", appData.getDirectoryHeader().getKvc(WriteAccessLevel.LOAD));
-
-    kvc3 = String.format("%02X", appData.getDirectoryHeader().getKvc(WriteAccessLevel.DEBIT));
-
-    status = String.format("%02X", appData.getDirectoryHeader().getDfStatus());
+    status = HexUtil.toHex(appData.getDirectoryHeader().getDfStatus());
 
     accessConditions =
         new AccessConditions(
             appData.getDirectoryHeader().getAccessConditions(),
             appData.getDirectoryHeader().getKeyIndexes());
 
-    applicationType = String.format("%02X", appData.getApplicationType());
+    applicationType = HexUtil.toHex(appData.getApplicationType());
 
-    applicationSubtype = String.format("%02X", appData.getApplicationSubtype());
+    applicationSubtype = HexUtil.toHex(appData.getApplicationSubtype());
 
-    fileList = new ArrayList<CardFileData>();
+    fileList = new ArrayList<>();
   }
 
   public void print(Logger logger) {
 
-    logger.info(
-        "========================================================================================================");
+    logger.info(SEPARATOR_LINE);
+    String paddedAid = ToolUtils.padLeft(HexUtil.toHex(this.getAid()), 32, ' ');
+    String paddedLid = ToolUtils.padLeft(this.getLid(), 4, '0');
+    String group0 =
+        ToolUtils.getAcName(
+            this.getAccessConditions().getGroup0().getAccessCondition(),
+            this.getAccessConditions().getGroup0().getKeyLevel(),
+            false);
+    String group1 =
+        ToolUtils.getAcName(
+            this.getAccessConditions().getGroup1().getAccessCondition(),
+            this.getAccessConditions().getGroup1().getKeyLevel(),
+            false);
+    String group2 =
+        ToolUtils.getAcName(
+            this.getAccessConditions().getGroup2().getAccessCondition(),
+            this.getAccessConditions().getGroup2().getKeyLevel(),
+            false);
+    String group3 =
+        ToolUtils.getAcName(
+            this.getAccessConditions().getGroup3().getAccessCondition(),
+            this.getAccessConditions().getGroup3().getKeyLevel(),
+            false);
     logger.info(
         "| AID                             | LID  | KVC1 | KVC2 | KVC3 | KIF1 | KIF2 | KIF3 | G0 | G1 | G2 | G3 |");
     logger.info(
-        "{}",
-        String.format(
-            "|%32s | %4s |  %2s  |  %2s  |  %2s  |  %2s  |  %2s  |  %2s  | %s | %s | %s | %s |",
-            HexUtil.toHex(this.getAid()),
-            this.getLid(),
-            this.getKvc1(),
-            this.getKvc2(),
-            this.getKvc3(),
-            this.getKif1(),
-            this.getKif2(),
-            this.getKif3(),
-            ToolUtils.getAcName(
-                this.getAccessConditions().getGroup0().getAccessCondition(),
-                this.getAccessConditions().getGroup0().getKeyLevel(),
-                false),
-            ToolUtils.getAcName(
-                this.getAccessConditions().getGroup1().getAccessCondition(),
-                this.getAccessConditions().getGroup1().getKeyLevel(),
-                false),
-            ToolUtils.getAcName(
-                this.getAccessConditions().getGroup2().getAccessCondition(),
-                this.getAccessConditions().getGroup2().getKeyLevel(),
-                false),
-            ToolUtils.getAcName(
-                this.getAccessConditions().getGroup3().getAccessCondition(),
-                this.getAccessConditions().getGroup3().getKeyLevel(),
-                false)));
-    logger.info(
-        "========================================================================================================");
+        "|{} | {} |  {}  |  {}  |  {}  |  {}  |  {}  |  {}  | {} | {} | {} | {} |",
+        paddedAid,
+        paddedLid,
+        this.getKvc1(),
+        this.getKvc2(),
+        this.getKvc3(),
+        this.getKif1(),
+        this.getKif2(),
+        this.getKif3(),
+        group0,
+        group1,
+        group2,
+        group3);
+    logger.info(SEPARATOR_LINE);
 
-    logger.info("{}", String.format("= FCI:: %s", HexUtil.toHex(this.getFci())));
-    logger.info(
-        "{}",
-        String.format("= Serial Number:: %s (%d)", HexUtil.toHex(this.getCsn()), this.getCsnDec()));
-    logger.info("{}", String.format("= Transaction Counter:: %d", this.getTransactionCounterDec()));
-    logger.info("{}", String.format("= Revision:: %s", this.getCalypsoRevision()));
-    logger.info("{}", String.format("= Session Buffer Size:: %d bytes", this.getBufferSize()));
-    logger.info("{}", String.format("= Platform (Chip Type):: %s", this.getPlatform()));
+    logger.info("= FCI:: {}", HexUtil.toHex(this.getFci()));
+    logger.info("= Serial Number:: {} ({})", HexUtil.toHex(this.getCsn()), this.getCsnDec());
+    logger.info("= Transaction Counter:: {}", this.getTransactionCounterDec());
+    logger.info("= Revision:: {}", this.getCalypsoRevision());
+    logger.info("= Session Buffer Size:: {} bytes", this.getBufferSize());
+    logger.info("= Platform (Chip Type):: {}", this.getPlatform());
 
     if (this.getIssuerInfo() != null) {
       logger.info(
-          "{}",
-          String.format(
-              "= Issuer:: %s(%s)",
-              this.getIssuerInfo().getName(), this.getIssuerInfo().getValue()));
+          "= Issuer:: {} ({})", this.getIssuerInfo().getName(), this.getIssuerInfo().getValue());
     } else {
       logger.info("= Issuer:: null");
     }
-
-    logger.info(
-        "{}", String.format("= Software Version:: %s.%s", this.getVersion(), this.getRevision()));
-    logger.info("{}", String.format("= Application Type:: %s", this.getApplicationType()));
-    logger.info("{}", String.format("= Application Subtype:: %s", this.getApplicationSubtype()));
-    logger.info("{}", String.format("= DF Status:: %2s", this.getStatus()));
-    logger.info(
-        "========================================================================================================");
+    logger.info("= Software Version:: {}.{}", this.getVersion(), this.getRevision());
+    logger.info("= Application Type:: {}", this.getApplicationType());
+    logger.info("= Application Subtype:: {}", this.getApplicationSubtype());
+    logger.info("= DF Status:: {}", this.getStatus());
+    logger.info(SEPARATOR_LINE);
 
     logger.info("| LID  | Type | SID | #R | Size | G0 | G1 | G2 | G3 | DRef |");
     logger.info("----------------------------------------------------------");
 
-    List<CardFileData> fileList = this.getFileList();
-    Iterator fileIter = fileList.iterator();
-
-    while (fileIter.hasNext()) {
-
-      CardFileData fileData = (CardFileData) fileIter.next();
+    for (CardFileData fileData : this.getFileList()) {
 
       fileData.print(logger);
     }
@@ -320,10 +312,6 @@ public class CardApplicationData {
   }
 
   public Issuer getIssuerInfo() {
-    return issuer;
-  }
-
-  public Issuer getIssuer() {
     return issuer;
   }
 

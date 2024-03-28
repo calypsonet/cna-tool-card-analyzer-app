@@ -11,26 +11,34 @@
  ************************************************************************************** */
 package org.cna.keyple.tool.calypso.carddata;
 
+import static org.cna.keyple.tool.calypso.common.ToolUtils.SEPARATOR_LINE;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
+import org.cna.keyple.tool.calypso.common.ToolUtils;
 import org.eclipse.keyple.core.util.HexUtil;
 import org.slf4j.Logger;
 
+/**
+ * Structure of a card's data.
+ *
+ * @since 2.0.0
+ */
 public class CardStructureData {
 
   private String id;
 
-  private String infos;
+  private final String infos;
 
-  private String date;
+  private final String date;
 
-  private int version;
+  private final int version;
 
-  private String software;
+  private final String software;
 
-  private byte[] traceability;
+  private final byte[] traceability;
 
-  private List<CardApplicationData> applicationList = null;
+  private final List<CardApplicationData> applicationList;
 
   public CardStructureData(
       byte[] traceabilityInfo,
@@ -41,18 +49,15 @@ public class CardStructureData {
 
     traceability = Arrays.copyOf(traceabilityInfo, traceabilityInfo.length);
 
-    infos = new String(softwareInfo);
+    infos = softwareInfo;
 
-    String dateString =
-        new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(creationDate.getTime()));
-
-    date = new String(dateString);
+    date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(creationDate.getTime()));
 
     version = softwareVersion;
 
-    software = new String(softwareName);
+    software = softwareName;
 
-    applicationList = new ArrayList<CardApplicationData>();
+    applicationList = new ArrayList<>();
   }
 
   public List<CardApplicationData> getApplicationList() {
@@ -61,24 +66,18 @@ public class CardStructureData {
 
   public void print(Logger logger) {
 
-    logger.info(
-        "========================================================================================================");
-    logger.info("{}", String.format("= Id:: %s", this.getId()));
-    logger.info("{}", String.format("= Date:: %s", this.getDate()));
-    logger.info("{}", String.format("= Version:: %03d", this.getVersion()));
-    logger.info("{}", String.format("= Software:: %s", this.getSoftware()));
-    logger.info("{}", String.format("= Traceability:: %s", HexUtil.toHex(this.getTraceability())));
+    logger.info(SEPARATOR_LINE);
+    logger.info("= Id:: {}", this.getId());
+    logger.info("= Date:: {}", this.getDate());
+    logger.info("= Version:: {}", ToolUtils.padLeft(String.valueOf(this.getVersion()), 3, '0'));
+    logger.info("= Software:: {}", this.getSoftware());
+    logger.info("= Traceability:: {}", HexUtil.toHex(this.getTraceability()));
 
-    List<CardApplicationData> applicationList = this.getApplicationList();
-    Iterator appIter = applicationList.iterator();
-
-    while (appIter.hasNext()) {
-      CardApplicationData applicationData = (CardApplicationData) appIter.next();
-
+    for (CardApplicationData applicationData : this.getApplicationList()) {
       applicationData.print(logger);
     }
-    logger.info(
-        "========================================================================================================");
+
+    logger.info(SEPARATOR_LINE);
   }
 
   public byte[] getTraceability() {

@@ -16,16 +16,6 @@ import com.google.gson.GsonBuilder;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import org.calypsonet.terminal.calypso.GetDataTag;
-import org.calypsonet.terminal.calypso.SelectFileControl;
-import org.calypsonet.terminal.calypso.card.CalypsoCard;
-import org.calypsonet.terminal.calypso.card.CalypsoCardSelection;
-import org.calypsonet.terminal.calypso.card.ElementaryFile;
-import org.calypsonet.terminal.calypso.transaction.CardTransactionManager;
-import org.calypsonet.terminal.calypso.transaction.UnexpectedCommandStatusException;
-import org.calypsonet.terminal.reader.CardReader;
-import org.calypsonet.terminal.reader.selection.CardSelectionManager;
-import org.calypsonet.terminal.reader.selection.CardSelectionResult;
 import org.cna.keyple.tool.calypso.carddata.CardApplicationData;
 import org.cna.keyple.tool.calypso.carddata.CardFileData;
 import org.cna.keyple.tool.calypso.carddata.CardStructureData;
@@ -37,23 +27,44 @@ import org.eclipse.keyple.core.service.SmartCardService;
 import org.eclipse.keyple.core.service.SmartCardServiceProvider;
 import org.eclipse.keyple.plugin.pcsc.PcscPluginFactoryBuilder;
 import org.eclipse.keyple.plugin.pcsc.PcscReader;
+import org.eclipse.keypop.calypso.card.GetDataTag;
+import org.eclipse.keypop.calypso.card.SelectFileControl;
+import org.eclipse.keypop.calypso.card.card.CalypsoCard;
+import org.eclipse.keypop.calypso.card.card.CalypsoCardSelectionExtension;
+import org.eclipse.keypop.calypso.card.card.ElementaryFile;
+import org.eclipse.keypop.calypso.card.transaction.ChannelControl;
+import org.eclipse.keypop.calypso.card.transaction.FreeTransactionManager;
+import org.eclipse.keypop.calypso.card.transaction.SelectFileException;
+import org.eclipse.keypop.calypso.card.transaction.UnexpectedCommandStatusException;
+import org.eclipse.keypop.reader.CardReader;
+import org.eclipse.keypop.reader.selection.CardSelectionManager;
+import org.eclipse.keypop.reader.selection.CardSelectionResult;
+import org.eclipse.keypop.reader.selection.CommonIsoCardSelector;
+import org.eclipse.keypop.reader.selection.IsoCardSelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Tool for analyzing the file structure of a Calypso smart card.
+ *
+ * @since 2.0.0 .
+ */
 public class Tool_AnalyzeCardFileStructure {
 
   private static final Logger logger = LoggerFactory.getLogger(Tool_AnalyzeCardFileStructure.class);
   private static final SmartCardService smartCardService = SmartCardServiceProvider.getService();
   private static final CalypsoExtensionService calypsoCardService =
       CalypsoExtensionService.getInstance();
+  private static final String SOFTWARE_INFORMATION = "AnalyzeCardFileStructure";
+  private static final String SOFTWARE_NAME = "Calypso Card Analyzer";
   private static CardReader cardReader;
-  private static CardTransactionManager cardTransactionManager;
+  private static FreeTransactionManager cardTransactionManager;
 
   private static void fillFilesTable(CalypsoCard selectedApp) {
 
     cardTransactionManager.prepareSelectFile(SelectFileControl.FIRST_EF);
     try {
-      cardTransactionManager.processCommands();
+      cardTransactionManager.processCommands(ChannelControl.KEEP_OPEN);
     } catch (UnexpectedCommandStatusException e) {
       return;
     }
@@ -69,8 +80,8 @@ public class Tool_AnalyzeCardFileStructure {
       numberOfFiles++;
       cardTransactionManager.prepareSelectFile(SelectFileControl.NEXT_EF);
       try {
-        cardTransactionManager.processCommands();
-      } catch (UnexpectedCommandStatusException e) {
+        cardTransactionManager.processCommands(ChannelControl.KEEP_OPEN);
+      } catch (SelectFileException e) {
         return;
       }
 
@@ -90,9 +101,10 @@ public class Tool_AnalyzeCardFileStructure {
       for (int i = 0; i < selectedFile.getHeader().getRecordsNumber(); i++) {
 
         calypsoCardService
-            .createCardTransactionWithoutSecurity(cardReader, selectedApp)
+            .getCalypsoCardApiFactory()
+            .createFreeTransactionManager(cardReader, selectedApp)
             .prepareReadRecord(selectedFile.getSfi(), (byte) (i + 1))
-            .processCommands();
+            .processCommands(ChannelControl.KEEP_OPEN);
 
         fileData
             .getRecordData()
@@ -104,16 +116,25 @@ public class Tool_AnalyzeCardFileStructure {
   }
 
   private static CardApplicationData getApplicationData(
-      CalypsoCardSelection.FileOccurrence fileOccurrence, String aid) {
+      CommonIsoCardSelector.FileOccurrence fileOccurrence, String aid) {
 
-    CardSelectionManager cardSelectionManager = smartCardService.createCardSelectionManager();
+    CardSelectionManager cardSelectionManager =
+        smartCardService.getReaderApiFactory().createCardSelectionManager();
 
-    cardSelectionManager.prepareSelection(
-        calypsoCardService
-            .createCardSelection()
-            .setFileOccurrence(fileOccurrence)
-            .acceptInvalidatedCard()
-            .filterByDfName(aid));
+    IsoCardSelector isoCardSelector =
+        SmartCardServiceProvider.getService()
+            .getReaderApiFactory()
+            .createIsoCardSelector()
+            .filterByDfName(aid)
+            .setFileOccurrence(fileOccurrence);
+
+    CalypsoCardSelectionExtension calypsoCardSelectionExtension =
+        CalypsoExtensionService.getInstance()
+            .getCalypsoCardApiFactory()
+            .createCalypsoCardSelectionExtension()
+            .acceptInvalidatedCard();
+
+    cardSelectionManager.prepareSelection(isoCardSelector, calypsoCardSelectionExtension);
 
     CardSelectionResult selectionResult =
         cardSelectionManager.processCardSelectionScenario(cardReader);
@@ -125,20 +146,20 @@ public class Tool_AnalyzeCardFileStructure {
     CalypsoCard selectedApplication = (CalypsoCard) selectionResult.getActiveSmartCard();
 
     cardTransactionManager =
-        calypsoCardService.createCardTransactionWithoutSecurity(cardReader, selectedApplication);
+        calypsoCardService
+            .getCalypsoCardApiFactory()
+            .createFreeTransactionManager(cardReader, selectedApplication);
     cardTransactionManager.prepareSelectFile(SelectFileControl.CURRENT_DF);
-    cardTransactionManager.processCommands();
+    cardTransactionManager.processCommands(ChannelControl.KEEP_OPEN);
 
     // Get and fill the Application file information
     CardApplicationData cardAppData = new CardApplicationData(selectedApplication);
 
     fillFilesTable(selectedApplication);
 
-    Iterator<ElementaryFile> filesIter = selectedApplication.getFiles().iterator();
+    for (ElementaryFile elementaryFile : selectedApplication.getFiles()) {
 
-    while (filesIter.hasNext()) {
-
-      CardFileData cardFileData = getFileData(filesIter.next(), selectedApplication);
+      CardFileData cardFileData = getFileData(elementaryFile, selectedApplication);
       cardAppData.getFileList().add(cardFileData);
     }
 
@@ -147,19 +168,23 @@ public class Tool_AnalyzeCardFileStructure {
 
   public static byte[] getTraceabilityInfo(List<String> aidList) {
 
-    CardSelectionManager cardSelectionManager = smartCardService.createCardSelectionManager();
+    CardSelectionManager cardSelectionManager =
+        smartCardService.getReaderApiFactory().createCardSelectionManager();
 
-    Iterator aidListIter = aidList.iterator();
+    for (String currentAid : aidList) {
 
-    while (aidListIter.hasNext()) {
+      IsoCardSelector isoCardSelector =
+          SmartCardServiceProvider.getService()
+              .getReaderApiFactory()
+              .createIsoCardSelector()
+              .filterByDfName(currentAid);
 
-      String currentAid = (String) aidListIter.next();
+      CalypsoCardSelectionExtension calypsoCardSelectionExtension =
+          CalypsoExtensionService.getInstance()
+              .getCalypsoCardApiFactory()
+              .createCalypsoCardSelectionExtension();
 
-      cardSelectionManager.prepareSelection(
-          calypsoCardService
-              .createCardSelection()
-              .acceptInvalidatedCard()
-              .filterByDfName(currentAid));
+      cardSelectionManager.prepareSelection(isoCardSelector, calypsoCardSelectionExtension);
 
       CardSelectionResult selectionResult =
           cardSelectionManager.processCardSelectionScenario(cardReader);
@@ -169,25 +194,27 @@ public class Tool_AnalyzeCardFileStructure {
         CalypsoCard calypsoCard = (CalypsoCard) selectionResult.getActiveSmartCard();
 
         cardTransactionManager =
-            calypsoCardService.createCardTransactionWithoutSecurity(cardReader, calypsoCard);
+            calypsoCardService
+                .getCalypsoCardApiFactory()
+                .createFreeTransactionManager(cardReader, calypsoCard);
         cardTransactionManager.prepareGetData(GetDataTag.TRACEABILITY_INFORMATION);
-        cardTransactionManager.processCommands();
+        cardTransactionManager.processCommands(ChannelControl.KEEP_OPEN);
 
         return calypsoCard.getTraceabilityInformation();
       }
     }
 
-    return null;
+    return null; // NOSONAR
   }
 
   public static void getApplicationsData(String aid, List<CardApplicationData> cardAppDataList) {
 
     CardApplicationData cardAppData =
-        getApplicationData(CalypsoCardSelection.FileOccurrence.FIRST, aid);
+        getApplicationData(CommonIsoCardSelector.FileOccurrence.FIRST, aid);
 
     while (cardAppData != null) {
       cardAppDataList.add(cardAppData);
-      cardAppData = getApplicationData(CalypsoCardSelection.FileOccurrence.NEXT, aid);
+      cardAppData = getApplicationData(CommonIsoCardSelector.FileOccurrence.NEXT, aid);
     }
   }
 
@@ -242,12 +269,10 @@ public class Tool_AnalyzeCardFileStructure {
 
       CardStructureData cardStructureData =
           new CardStructureData(
-              traceabilityInfo, "AnalyzeCardFileStructure", new Date(), 2, "Keyple");
+              traceabilityInfo, SOFTWARE_INFORMATION, new Date(), 2, SOFTWARE_NAME);
 
-      Iterator aidListIter = aidList.iterator();
-
-      while (aidListIter.hasNext()) {
-        getApplicationsData((String) aidListIter.next(), cardStructureData.getApplicationList());
+      for (String s : aidList) {
+        getApplicationsData(s, cardStructureData.getApplicationList());
       }
 
       try {
@@ -260,11 +285,10 @@ public class Tool_AnalyzeCardFileStructure {
         String dateString = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
         String fileName =
-            new String(
-                dateString
-                    + "_CardData_"
-                    + cardStructureData.getApplicationList().get(0).getCsnDec()
-                    + ".json");
+            dateString
+                + "_CardData_"
+                + cardStructureData.getApplicationList().get(0).getCsnDec()
+                + ".json";
 
         cardStructureData.setId(fileName);
 
@@ -275,7 +299,7 @@ public class Tool_AnalyzeCardFileStructure {
         fw.close();
 
       } catch (Exception e) {
-        logger.error("Exception while writing the report: " + e.getCause());
+        logger.error("Exception while writing the report: {}", e.getMessage(), e);
       }
 
       cardStructureData.print(logger);

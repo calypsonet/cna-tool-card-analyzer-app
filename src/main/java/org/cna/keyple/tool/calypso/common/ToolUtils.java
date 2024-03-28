@@ -13,15 +13,22 @@ package org.cna.keyple.tool.calypso.common;
 
 import com.google.gson.*;
 import java.lang.reflect.Type;
-import org.calypsonet.terminal.calypso.card.ElementaryFile;
 import org.eclipse.keyple.core.service.Plugin;
 import org.eclipse.keyple.core.util.HexUtil;
+import org.eclipse.keypop.calypso.card.card.ElementaryFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Utility class for various tool functions.
+ *
+ * @since 2.0.0
+ */
 public class ToolUtils {
 
   private static final Logger logger = LoggerFactory.getLogger(ToolUtils.class);
+  public static final String SEPARATOR_LINE =
+      "========================================================================================================";
 
   public static final String CARD_READER_NAME_REGEX = ".*(ASK.*|Identiv.*2|ACS ACR122U|SCR3310).*";
   public static final String ISO_CARD_PROTOCOL = "ISO_14443_4_CARD";
@@ -34,6 +41,8 @@ public class ToolUtils {
   public static final int CARD_EF_TYPE_SIMULATED_COUNTERS = 8;
   public static final int CARD_EF_TYPE_COUNTERS = 9;
 
+  private ToolUtils() {}
+
   public static String getCardReaderName(Plugin plugin, String readerNameRegex) {
     for (String readerName : plugin.getReaderNames()) {
       if (readerName.matches(readerNameRegex)) {
@@ -42,16 +51,7 @@ public class ToolUtils {
       }
     }
     throw new IllegalStateException(
-        String.format("Reader '%s' not found in plugin '%s'", readerNameRegex, plugin.getName()));
-  }
-
-  public static long bytesToLong(byte[] b, int length) {
-    long result = 0;
-    for (int i = 0; i < length; i++) {
-      result <<= 8;
-      result |= (b[i] & 0xFF);
-    }
-    return result;
+        "Reader '" + readerNameRegex + "' not found in plugin '" + plugin.getName() + "'");
   }
 
   public static String getEfTypeName(String inEfType, boolean longModeFlag) {
@@ -65,31 +65,34 @@ public class ToolUtils {
     switch (inEfType) {
       case CARD_EF_TYPE_BINARY:
         {
-          return ((longModeFlag == true) ? "Binary" : "Bin ");
+          return (longModeFlag ? "Binary" : "Bin ");
         }
 
       case CARD_EF_TYPE_LINEAR:
         {
-          return ((longModeFlag == true) ? "Linear" : "Lin ");
+          return (longModeFlag ? "Linear" : "Lin ");
         }
 
       case CARD_EF_TYPE_CYCLIC:
         {
-          return ((longModeFlag == true) ? "Cyclic" : "Cycl");
+          return (longModeFlag ? "Cyclic" : "Cycl");
         }
 
       case CARD_EF_TYPE_SIMULATED_COUNTERS:
         {
-          return ((longModeFlag == true) ? "SimulatedCounter" : "SimC");
+          return (longModeFlag ? "SimulatedCounter" : "SimC");
         }
 
       case CARD_EF_TYPE_COUNTERS:
         {
-          return ((longModeFlag == true) ? "Counter" : "Cnt ");
+          return (longModeFlag ? "Counter" : "Cnt ");
+        }
+
+      default:
+        {
+          return "--";
         }
     }
-
-    return "--";
   }
 
   public static int getEfTypeIntValue(ElementaryFile.Type inType) {
@@ -119,8 +122,12 @@ public class ToolUtils {
         {
           return CARD_EF_TYPE_SIMULATED_COUNTERS;
         }
+
+      default:
+        {
+          return 0;
+        }
     }
-    return 0;
   }
 
   public static String getAcName(String inAcValue, String inKeyLevel, boolean longModeFlag) {
@@ -135,36 +142,38 @@ public class ToolUtils {
     switch (inAcValue) {
       case 0x1F:
         {
-          return ((longModeFlag == true) ? "Always" : "AA");
+          return (longModeFlag ? "Always" : "AA");
         }
 
       case 0x00:
         {
-          return ((longModeFlag == true) ? "Never" : "NN");
+          return (longModeFlag ? "Never" : "NN");
         }
 
       case 0x10:
         {
-          return ((longModeFlag == true) ? ("Session" + inKeyLevel) : ("S" + inKeyLevel));
+          return (longModeFlag ? ("Session" + inKeyLevel) : ("S" + inKeyLevel));
         }
 
       case 0x01:
         {
-          return ((longModeFlag == true) ? "PIN" : "PN");
+          return (longModeFlag ? "PIN" : "PN");
         }
 
       case 0x14:
         {
-          return ((longModeFlag == true) ? "Confidential" + inKeyLevel : "C" + inKeyLevel);
+          return (longModeFlag ? "Confidential" + inKeyLevel : "C" + inKeyLevel);
         }
 
       case 0x15:
         {
-          return ((longModeFlag == true) ? "Confidential&PIN" + inKeyLevel : "P" + inKeyLevel);
+          return (longModeFlag ? "Confidential&PIN" + inKeyLevel : "P" + inKeyLevel);
+        }
+      default:
+        {
+          return "--";
         }
     }
-
-    return "--";
   }
 
   public static String getIssuerName(byte inIssuer) {
@@ -396,9 +405,12 @@ public class ToolUtils {
         {
           return "Aruba PEC";
         }
-    }
 
-    return "--";
+      default:
+        {
+          return "--";
+        }
+    }
   }
 
   public static class HexTypeAdapter implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {
@@ -411,6 +423,18 @@ public class ToolUtils {
     public JsonElement serialize(byte[] data, Type typeOfSrc, JsonSerializationContext context) {
       return new JsonPrimitive(HexUtil.toHex(data));
     }
+  }
+
+  public static String padLeft(String input, int length, char padChar) {
+    if (length <= input.length()) {
+      return input;
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = input.length(); i < length; i++) {
+      sb.append(padChar);
+    }
+    sb.append(input);
+    return sb.toString();
   }
 
   /*

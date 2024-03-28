@@ -11,11 +11,12 @@
  ************************************************************************************** */
 package org.cna.keyple.tool.calypso.card;
 
+import static org.cna.keyple.tool.calypso.common.ToolUtils.SEPARATOR_LINE;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.cna.keyple.tool.calypso.carddata.*;
 import org.cna.keyple.tool.calypso.carddata.AccessConditions.AccessCondition;
@@ -24,6 +25,11 @@ import org.eclipse.keyple.core.util.HexUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Provides functionality to check the file structure of a Calypso card.
+ *
+ * @since 2.0.0
+ */
 public class Tool_CheckCardFileStructure {
 
   private static final Logger logger = LoggerFactory.getLogger(Tool_CheckCardFileStructure.class);
@@ -36,13 +42,10 @@ public class Tool_CheckCardFileStructure {
     if (dataToCheck.getAccessCondition() != null
         && !dataToCheck.getAccessCondition().equals(dataRead.getAccessCondition())) {
       logger.info(
-          "Group "
-              + groupNumber
-              + ":: Expected Access Condition to be ["
-              + dataToCheck.getAccessCondition()
-              + "] and found ["
-              + dataRead.getAccessCondition()
-              + "].");
+          "Group {}:: Expected Access Condition to be [{}] and found [{}].",
+          groupNumber,
+          dataToCheck.getAccessCondition(),
+          dataRead.getAccessCondition());
     }
 
     if (dataToCheck.getAccessCondition().equals("10")
@@ -51,20 +54,15 @@ public class Tool_CheckCardFileStructure {
 
       if (dataToCheck.getKeyLevel() == null) {
         logger.info(
-            "Group "
-                + groupNumber
-                + ":: Structure to check error. Access Condition ["
-                + dataToCheck.getAccessCondition()
-                + "] requires an associated Key Level.");
+            "Group {}:: Structure to check error. Access Condition [{}] requires an associated Key Level.",
+            groupNumber,
+            dataToCheck.getAccessCondition());
       } else if (!dataToCheck.getKeyLevel().equals(dataRead.getKeyLevel())) {
         logger.info(
-            "Group "
-                + groupNumber
-                + ":: Expected Key Level to be ["
-                + dataToCheck.getKeyLevel()
-                + "] and found ["
-                + dataRead.getKeyLevel()
-                + "].");
+            "Group {}:: Expected Key Level to be [{}] and found [{}].",
+            groupNumber,
+            dataToCheck.getKeyLevel(),
+            dataRead.getKeyLevel());
       }
     }
   }
@@ -81,20 +79,15 @@ public class Tool_CheckCardFileStructure {
   private static void checkString(String name, String dataToCheck, String dataRead) {
 
     if (dataToCheck != null && !dataToCheck.equals(dataRead)) {
-      logger.info(
-          "Expected " + name + " to be [" + dataToCheck + "] and found [" + dataRead + "].");
+      logger.info("Expected {} to be [{}] and found [{}].", name, dataToCheck, dataRead);
     }
   }
 
   private static void checkDataRef(FileReference refToCheck) {
 
-    if (dataRefStatus.size() > 0) {
+    if (!dataRefStatus.isEmpty()) {
 
-      Iterator dataRefIterator = dataRefStatus.iterator();
-
-      while (dataRefIterator.hasNext()) {
-
-        FileReference fileRef = (FileReference) dataRefIterator.next();
+      for (FileReference fileRef : dataRefStatus) {
 
         if (fileRef.getLinkedFileLid().equals(refToCheck.getBaseFileLid())) {
 
@@ -102,15 +95,11 @@ public class Tool_CheckCardFileStructure {
             fileRef.setReferenceFoundFlag(true);
           } else {
             logger.info(
-                "DataRef for file "
-                    + refToCheck.getBaseFileLid()
-                    + " ["
-                    + refToCheck.getRefValueRead()
-                    + "] doesn't match the value of the linked file "
-                    + fileRef.getBaseFileLid()
-                    + " ["
-                    + fileRef.getRefValueRead()
-                    + "].");
+                "DataRef for file {} [{}] doesn't match the value of the linked file {} [{}].",
+                refToCheck.getBaseFileLid(),
+                refToCheck.getRefValueRead(),
+                fileRef.getBaseFileLid(),
+                fileRef.getRefValueRead());
           }
 
           return;
@@ -128,15 +117,11 @@ public class Tool_CheckCardFileStructure {
       return;
     }
 
-    Iterator fileListReadIterator = fileListRead.iterator();
-
-    while (fileListReadIterator.hasNext()) {
-
-      CardFileData dataRead = (CardFileData) fileListReadIterator.next();
+    for (CardFileData dataRead : fileListRead) {
 
       if (dataToCheck.getSfi().equals(dataRead.getSfi())) {
 
-        logger.info("Checking file with SFI (" + dataToCheck.getSfi() + ")");
+        logger.info("Checking file with SFI ({})", dataToCheck.getSfi());
 
         checkString("LID", dataToCheck.getLid(), dataRead.getLid());
 
@@ -164,7 +149,7 @@ public class Tool_CheckCardFileStructure {
       }
     }
 
-    logger.info("No matching file found for SFI (" + dataToCheck.getSfi() + ")");
+    logger.info("No matching file found for SFI ({})", dataToCheck.getSfi());
   }
 
   private static void checkApplicationType(String dataToCheck, String dataRead) {
@@ -184,38 +169,30 @@ public class Tool_CheckCardFileStructure {
 
     if ((applicationTypeToCheck & 0x01) != (applicationTypeRead & 0x01)) {
       logger.info(
-          "Incorrect value for PIN configuration flag. Expected ("
-              + (applicationTypeToCheck & 0x01)
-              + ") and got ("
-              + (applicationTypeRead & 0x01)
-              + ").");
+          "Incorrect value for PIN configuration flag. Expected ({}) and got ({}).",
+          applicationTypeToCheck & 0x01,
+          applicationTypeRead & 0x01);
     }
 
     if ((applicationTypeToCheck & 0x02) != (applicationTypeRead & 0x02)) {
       logger.info(
-          "Incorrect value for SV configuration flag. Expected ("
-              + (applicationTypeToCheck & 0x02)
-              + ") and got ("
-              + (applicationTypeRead & 0x02)
-              + ").");
+          "Incorrect value for SV configuration flag. Expected ({}) and got ({}).",
+          applicationTypeToCheck & 0x02,
+          applicationTypeRead & 0x02);
     }
 
     if ((applicationTypeToCheck & 0x08) != (applicationTypeRead & 0x08)) {
       logger.info(
-          "Incorrect value for Rev 3.2 mode support configuration flag. Expected ("
-              + (applicationTypeToCheck & 0x08)
-              + ") and got ("
-              + (applicationTypeRead & 0x08)
-              + ").");
+          "Incorrect value for Rev 3.2 mode support configuration flag. Expected ({}) and got ({}).",
+          applicationTypeToCheck & 0x08,
+          applicationTypeRead & 0x08);
     }
 
     if ((applicationTypeToCheck & 0x10) != (applicationTypeRead & 0x10)) {
       logger.info(
-          "Incorrect value for Rev 3.3 PKI mode support configuration flag. Expected ("
-              + (applicationTypeToCheck & 0x10)
-              + ") and got ("
-              + (applicationTypeRead & 0x10)
-              + ").");
+          "Incorrect value for Rev 3.3 PKI mode support configuration flag. Expected ({}) and got ({}).",
+          applicationTypeToCheck & 0x10,
+          applicationTypeRead & 0x10);
     }
   }
 
@@ -247,17 +224,13 @@ public class Tool_CheckCardFileStructure {
 
     if (dataToCheck.getFileList().size() != dataRead.getFileList().size()) {
       logger.info(
-          "Expected application to have ("
-              + dataToCheck.getFileList().size()
-              + ") file(s) and found ("
-              + dataRead.getFileList().size()
-              + ").");
+          "Expected application to have ({}) file(s) and found ({}).",
+          dataToCheck.getFileList().size(),
+          dataRead.getFileList().size());
     }
 
-    Iterator fileListToCheckIter = dataToCheck.getFileList().iterator();
-
-    while (fileListToCheckIter.hasNext()) {
-      checkCardFileData((CardFileData) fileListToCheckIter.next(), dataRead.getFileList());
+    for (CardFileData cardFileData : dataToCheck.getFileList()) {
+      checkCardFileData(cardFileData, dataRead.getFileList());
     }
   }
 
@@ -267,7 +240,7 @@ public class Tool_CheckCardFileStructure {
 
     CardStructureData fileStructureToCheck;
 
-    dataRefStatus = new ArrayList<FileReference>();
+    dataRefStatus = new ArrayList<>();
 
     Gson gson =
         new GsonBuilder()
@@ -282,59 +255,47 @@ public class Tool_CheckCardFileStructure {
               CardStructureData.class);
 
     } catch (Exception e) {
-      logger.error("Exception while loading file structure to check " + e.getCause());
+      logger.error("Exception while loading file structure to check {}", e.getMessage(), e);
       return;
     }
 
     /* Check if a card is present in the reader */
     if (isCardPresent) {
 
-      Iterator appToCheckListIter = fileStructureToCheck.getApplicationList().iterator();
+      for (CardApplicationData cardApplicationData : fileStructureToCheck.getApplicationList()) {
 
-      while (appToCheckListIter.hasNext()) {
+        List<CardApplicationData> cardAppDataList = new ArrayList<>();
 
-        List<CardApplicationData> cardAppDataList = new ArrayList<CardApplicationData>();
-        CardApplicationData cardAppDataToCheck = (CardApplicationData) appToCheckListIter.next();
-
-        logger.info(
-            "========================================================================================================");
-        logger.info("Checking Application:: " + HexUtil.toHex(cardAppDataToCheck.getAid()));
+        logger.info(SEPARATOR_LINE);
+        logger.info("Checking Application: {}", HexUtil.toHex(cardApplicationData.getAid()));
 
         Tool_AnalyzeCardFileStructure.getApplicationsData(
-            HexUtil.toHex(cardAppDataToCheck.getAid()), cardAppDataList);
+            HexUtil.toHex(cardApplicationData.getAid()), cardAppDataList);
 
-        if (cardAppDataList.size() == 0) {
+        if (cardAppDataList.isEmpty()) {
           logger.info("Application not present in card!");
         } else if (cardAppDataList.size() > 1) {
           logger.info(
-              "Found ("
-                  + cardAppDataList.size()
-                  + ") applications for the given AID. Aborting application analysis");
+              "Found ({}) applications for the given AID. Aborting application analysis",
+              cardAppDataList.size());
         } else {
-          checkCardAppData(cardAppDataToCheck, cardAppDataList.get(0));
+          checkCardAppData(cardApplicationData, cardAppDataList.get(0));
         }
       }
 
-      logger.info(
-          "========================================================================================================");
+      logger.info(SEPARATOR_LINE);
 
-      Iterator dataRefIter = dataRefStatus.iterator();
+      for (FileReference fileRef : dataRefStatus) {
 
-      while (dataRefIter.hasNext()) {
-
-        FileReference fileRef = (FileReference) dataRefIter.next();
-
-        if (fileRef.getReferenceFoundFlag() != true) {
+        if (!fileRef.getReferenceFoundFlag()) {
           logger.info(
-              "No/Incorrect data ref found for file "
-                  + fileRef.getBaseFileLid()
-                  + ". Should be linked with file "
-                  + fileRef.getLinkedFileLid());
+              "No/Incorrect data ref found for file {}. Should be linked with file {}",
+              fileRef.getBaseFileLid(),
+              fileRef.getLinkedFileLid());
         }
       }
 
-      logger.info(
-          "========================================================================================================");
+      logger.info(SEPARATOR_LINE);
     }
   }
 }

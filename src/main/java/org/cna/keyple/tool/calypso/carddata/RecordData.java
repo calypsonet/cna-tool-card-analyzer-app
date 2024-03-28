@@ -12,19 +12,24 @@
 package org.cna.keyple.tool.calypso.carddata;
 
 import java.util.Arrays;
+import org.eclipse.keyple.core.util.HexUtil;
 
+/**
+ * Represents a record data including index and value.
+ *
+ * @since 2.0.0
+ */
 public class RecordData {
 
-  private String index;
+  private final String index;
 
-  private byte[] value;
+  private final byte[] value;
 
   public RecordData(int recordIndex, byte[] recordData) {
 
-    index = String.format("%02X", recordIndex);
+    index = HexUtil.toHex(recordIndex);
 
     value = Arrays.copyOf(recordData, recordData.length);
-    ;
   }
 
   public String getIndex() {
