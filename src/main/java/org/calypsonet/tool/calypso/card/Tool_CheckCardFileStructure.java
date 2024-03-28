@@ -1,5 +1,5 @@
 /* **************************************************************************************
- * Copyright (c) 2019 Calypso Networks Association https://calypsonet.org/
+ * Copyright (c) 2024 Calypso Networks Association https://calypsonet.org/
  *
  * See the NOTICE file(s) distributed with this work for additional information
  * regarding copyright ownership.
@@ -9,18 +9,17 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  ************************************************************************************** */
-package org.cna.keyple.tool.calypso.card;
+package org.calypsonet.tool.calypso.card;
 
-import static org.cna.keyple.tool.calypso.common.ToolUtils.SEPARATOR_LINE;
+import static org.calypsonet.tool.calypso.common.ToolUtils.SEPARATOR_LINE;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import org.cna.keyple.tool.calypso.carddata.*;
-import org.cna.keyple.tool.calypso.carddata.AccessConditions.AccessCondition;
-import org.cna.keyple.tool.calypso.common.ToolUtils;
+import org.calypsonet.tool.calypso.carddata.*;
+import org.calypsonet.tool.calypso.common.ToolUtils;
 import org.eclipse.keyple.core.util.HexUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,9 @@ public class Tool_CheckCardFileStructure {
   private static List<FileReference> dataRefStatus;
 
   private static void checkAccessCondition(
-      int groupNumber, AccessCondition dataToCheck, AccessCondition dataRead) {
+      int groupNumber,
+      AccessConditions.AccessCondition dataToCheck,
+      AccessConditions.AccessCondition dataRead) {
 
     if (dataToCheck.getAccessCondition() != null
         && !dataToCheck.getAccessCondition().equals(dataRead.getAccessCondition())) {

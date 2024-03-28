@@ -1,5 +1,5 @@
 /* **************************************************************************************
- * Copyright (c) 2018 Calypso Networks Association https://calypsonet.org/
+ * Copyright (c) 2024 Calypso Networks Association https://calypsonet.org/
  *
  * See the NOTICE file(s) distributed with this work for additional information
  * regarding copyright ownership.
@@ -9,14 +9,14 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  ************************************************************************************** */
-package org.cna.keyple.tool.calypso.carddata;
+package org.calypsonet.tool.calypso.carddata;
 
-import static org.cna.keyple.tool.calypso.common.ToolUtils.SEPARATOR_LINE;
+import static org.calypsonet.tool.calypso.common.ToolUtils.SEPARATOR_LINE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.cna.keyple.tool.calypso.common.ToolUtils;
+import org.calypsonet.tool.calypso.common.ToolUtils;
 import org.eclipse.keyple.core.util.ByteArrayUtil;
 import org.eclipse.keyple.core.util.HexUtil;
 import org.eclipse.keypop.calypso.card.WriteAccessLevel;

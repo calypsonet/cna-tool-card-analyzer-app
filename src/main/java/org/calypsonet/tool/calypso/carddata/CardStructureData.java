@@ -1,5 +1,5 @@
 /* **************************************************************************************
- * Copyright (c) 2018 Calypso Networks Association https://calypsonet.org/
+ * Copyright (c) 2024 Calypso Networks Association https://calypsonet.org/
  *
  * See the NOTICE file(s) distributed with this work for additional information
  * regarding copyright ownership.
@@ -9,13 +9,11 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  ************************************************************************************** */
-package org.cna.keyple.tool.calypso.carddata;
-
-import static org.cna.keyple.tool.calypso.common.ToolUtils.SEPARATOR_LINE;
+package org.calypsonet.tool.calypso.carddata;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import org.cna.keyple.tool.calypso.common.ToolUtils;
+import org.calypsonet.tool.calypso.common.ToolUtils;
 import org.eclipse.keyple.core.util.HexUtil;
 import org.slf4j.Logger;
 
@@ -66,7 +64,7 @@ public class CardStructureData {
 
   public void print(Logger logger) {
 
-    logger.info(SEPARATOR_LINE);
+    logger.info(ToolUtils.SEPARATOR_LINE);
     logger.info("= Id:: {}", this.getId());
     logger.info("= Date:: {}", this.getDate());
     logger.info("= Version:: {}", ToolUtils.padLeft(String.valueOf(this.getVersion()), 3, '0'));
@@ -77,7 +75,7 @@ public class CardStructureData {
       applicationData.print(logger);
     }
 
-    logger.info(SEPARATOR_LINE);
+    logger.info(ToolUtils.SEPARATOR_LINE);
   }
 
   public byte[] getTraceability() {

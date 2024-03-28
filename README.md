@@ -19,7 +19,7 @@ data and generates a JSON report containing the card's structure and application
 - Retrieve card data and application data
 - Generate a JSON report containing the card's structure and application data
 
-### Usage
+### Program workflow
 
 1. Initialize the smart card reader and check if a card is present.
 2. Retrieve the traceability information of the card.
@@ -43,13 +43,57 @@ file containing the expected file structure.
 - Compare the expected file structure with the actual file structure of the card
 - Print the differences between the expected and actual file structures to the console
 
-### Usage
+### Program workflow
 
 1. Load the expected file structure from a JSON file.
 2. Initialize the smart card reader and check if a card is present.
 3. Retrieve the actual file structure of the card.
 4. Compare the expected file structure with the actual file structure.
 5. Print the differences between the expected and actual file structures to the console.
+
+---
+
+## Building and Using the Tools
+
+### Building the JARs
+
+To build the JARs for the Calypso Card Analyzer and Calypso Card File Structure Checker tools, follow these steps:
+
+1. Clone this Git repository to your local machine.
+2. Open a terminal and navigate to the root directory of the project.
+3. Run the following command to build the JARs:
+
+```bash
+./gradlew build
+```
+
+After running this command, the JARs will be generated in the `build/libs` directory of the project.
+
+### Using the JARs
+
+To use the JARs, follow these steps:
+
+1. Download the JARs from
+   the [releases](https://github.com/CalypsoNetworksAssociation/calypso-card-analysis-tools/releases) page of this
+   repository.
+2. Connect a Calypso card reader to your computer.
+3. Insert a Calypso card into the reader.
+4. Open a terminal and navigate to the directory containing the downloaded JARs.
+5. Run the following command to use the Calypso Card Analyzer tool:
+
+```bash
+java -jar Tool_AnalyzeCardFileStructure.jar
+```
+
+6. Run the following command to use the Calypso Card File Structure Checker tool:
+
+```bash
+java -jar Tool_CheckCardFileStructure.jar
+```
+
+The tools will read the card and perform their respective functions. The Calypso Card Analyzer tool will generate a JSON
+report containing the card's structure and application data, while the Calypso Card File Structure Checker tool will
+check the file structure of the card against a given JSON file containing the expected file structure.
 
 ### Dependencies
 

@@ -9,7 +9,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  ************************************************************************************** */
-package org.cna.keyple.tool.calypso.common;
+package org.calypsonet.tool.calypso.common;
 
 import com.google.gson.*;
 import java.lang.reflect.Type;

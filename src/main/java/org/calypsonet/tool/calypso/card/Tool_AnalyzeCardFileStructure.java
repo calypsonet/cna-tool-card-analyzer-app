@@ -1,5 +1,5 @@
 /* **************************************************************************************
- * Copyright (c) 2019 Calypso Networks Association https://calypsonet.org/
+ * Copyright (c) 2024 Calypso Networks Association https://calypsonet.org/
  *
  * See the NOTICE file(s) distributed with this work for additional information
  * regarding copyright ownership.
@@ -9,18 +9,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  ************************************************************************************** */
-package org.cna.keyple.tool.calypso.card;
+package org.calypsonet.tool.calypso.card;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import org.cna.keyple.tool.calypso.carddata.CardApplicationData;
-import org.cna.keyple.tool.calypso.carddata.CardFileData;
-import org.cna.keyple.tool.calypso.carddata.CardStructureData;
-import org.cna.keyple.tool.calypso.carddata.RecordData;
-import org.cna.keyple.tool.calypso.common.ToolUtils;
+import org.calypsonet.tool.calypso.carddata.CardApplicationData;
+import org.calypsonet.tool.calypso.carddata.CardFileData;
+import org.calypsonet.tool.calypso.carddata.CardStructureData;
+import org.calypsonet.tool.calypso.carddata.RecordData;
+import org.calypsonet.tool.calypso.common.ToolUtils;
 import org.eclipse.keyple.card.calypso.CalypsoExtensionService;
 import org.eclipse.keyple.core.service.Plugin;
 import org.eclipse.keyple.core.service.SmartCardService;

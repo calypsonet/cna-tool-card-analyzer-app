@@ -66,7 +66,20 @@ tasks {
         archiveClassifier.set("Analyze-fat")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         manifest {
-            attributes("Main-Class" to "org.cna.keyple.tool.card.Tool_AnalyzeCardFileStructure")
+            attributes("Main-Class" to "org.calypsonet.tool.calypso.card.Tool_AnalyzeCardFileStructure")
+        }
+        from(configurations.runtimeClasspath.get()
+            .onEach { println("add from dependencies: ${it.name}") }
+            .map { if (it.isDirectory) it else zipTree(it) })
+        val sourcesMain = sourceSets.main.get()
+        sourcesMain.allSource.forEach { println("add from sources: ${it.name}") }
+        from(sourcesMain.output)
+    }
+    register("fatJarCheck", Jar::class.java) {
+        archiveClassifier.set("Check-fat")
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        manifest {
+            attributes("Main-Class" to "org.calypsonet.tool.calypso.card.Tool_CheckCardFileStructure")
         }
         from(configurations.runtimeClasspath.get()
             .onEach { println("add from dependencies: ${it.name}") }
