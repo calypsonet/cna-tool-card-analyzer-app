@@ -237,7 +237,19 @@ public class Tool_CheckCardFileStructure {
 
   public static void main(String[] args) {
 
-    boolean isCardPresent = Tool_AnalyzeCardFileStructure.initReaders();
+    if (args.length < 1 || args.length > 2) {
+      logger.error("Usage: java -jar Tool_CheckCardFileStructure.jar <path-to-json-file> [readerNameRegex]");
+      return;
+    }
+
+    String readerNameRegex;
+    if (args.length == 2) {
+      readerNameRegex = args[1];
+    } else {
+      readerNameRegex = ToolUtils.DEFAULT_CARD_READER_NAME_REGEX;
+    }
+
+    boolean isCardPresent = Tool_AnalyzeCardFileStructure.initReaders(readerNameRegex);
 
     CardStructureData fileStructureToCheck;
 
@@ -250,10 +262,8 @@ public class Tool_CheckCardFileStructure {
             .create();
 
     try {
-      fileStructureToCheck =
-          gson.fromJson(
-              new FileReader("TestKit_CalypsoPrimeRegularProfile_v3.json"),
-              CardStructureData.class);
+      FileReader fileReader = new FileReader(args[0]);
+      fileStructureToCheck = gson.fromJson(fileReader, CardStructureData.class);
 
     } catch (Exception e) {
       logger.error("Exception while loading file structure to check {}", e.getMessage(), e);

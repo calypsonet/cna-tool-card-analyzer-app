@@ -218,14 +218,14 @@ public class Tool_AnalyzeCardFileStructure {
     }
   }
 
-  public static boolean initReaders() {
+  public static boolean initReaders(String readerNameRegex) {
 
     Plugin plugin = smartCardService.registerPlugin(PcscPluginFactoryBuilder.builder().build());
 
     smartCardService.checkCardExtension(calypsoCardService);
 
     String pcscContactlessCardReaderName =
-        ToolUtils.getCardReaderName(plugin, ToolUtils.CARD_READER_NAME_REGEX);
+        ToolUtils.getCardReaderName(plugin, readerNameRegex);
     cardReader = plugin.getReader(pcscContactlessCardReaderName);
 
     plugin
@@ -241,7 +241,14 @@ public class Tool_AnalyzeCardFileStructure {
 
   public static void main(String[] args) {
 
-    boolean isCardPresent = initReaders();
+    String readerNameRegex;
+    if (args.length == 1) {
+      readerNameRegex = args[0];
+    } else {
+      readerNameRegex = ToolUtils.DEFAULT_CARD_READER_NAME_REGEX;
+    }
+
+    boolean isCardPresent = initReaders(readerNameRegex);
 
     if (isCardPresent) {
 

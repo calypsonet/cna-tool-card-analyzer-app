@@ -1,10 +1,11 @@
 ## Introduction
 
-This Git repository contains several tools to facilitate interaction with Calypso cards and analyze their file
-structure. The tools in this repository are developed and maintained by Calypso Networks Association.
+This Git repository contains a set of tools for facilitating interaction with Calypso cards and analyzing their file
+structure. The tools are developed and maintained by the [Calypso Networks Association](https://calypsonet.org).
 
-This document provides a detailed description of each tool, including their features, usage, dependencies, license, and
-copyright information.
+This document provides a detailed description of the tools, including their features, usage, dependencies, license, and
+copyright information. Although there are two separate executables, they offer closely related and interconnected
+functionalities for working with Calypso cards.
 
 ---
 
@@ -69,31 +70,60 @@ To build the JARs for the Calypso Card Analyzer and Calypso Card File Structure 
 
 After running this command, the JARs will be generated in the `build/libs` directory of the project.
 
-### Using the JARs
+### Using the Calypso Card Analyzer JAR
 
-To use the JARs, follow these steps:
+To use the Calypso Card Analyzer JAR, follow these steps:
 
-1. Download the JARs from
+1. Download the Calypso Card Analyzer JAR from
    the [releases](https://github.com/CalypsoNetworksAssociation/calypso-card-analysis-tools/releases) page of this
    repository.
-2. Connect a Calypso card reader to your computer.
+2. Connect a PC/SC card reader to your computer.
 3. Insert a Calypso card into the reader.
-4. Open a terminal and navigate to the directory containing the downloaded JARs.
-5. Run the following command to use the Calypso Card Analyzer tool:
+4. Open a terminal and navigate to the directory containing the downloaded JAR.
+5. Run the following command:
 
 ```bash
-java -jar Tool_AnalyzeCardFileStructure.jar
+java -jar Tool_AnalyzeCardFileStructure.jar [readerNameRegex]
 ```
 
-6. Run the following command to use the Calypso Card File Structure Checker tool:
+The `readerNameRegex` parameter is optional and can be used to specify a regular expression for selecting the card reader
+to use. If this parameter is not provided, the tool will use the following
+expression `.*(ASK.*|Identiv.*2|ACS ACR122U|SCR3310).*`.
+
+The Calypso Card Analyzer tool will read the card and generate a JSON report containing the card's structure and
+application data.
+
+### Using the Calypso Card File Structure Checker JAR
+
+To use the Calypso Card File Structure Checker JAR, follow these steps:
+
+1. Download the Calypso Card File Structure Checker JAR from
+   the [releases](https://github.com/CalypsoNetworksAssociation/calypso-card-analysis-tools/releases) page of this
+   repository.
+2. Connect a PC/SC card reader to your computer.
+3. Insert a Calypso card into the reader.
+4. Open a terminal and navigate to the directory containing the downloaded JAR.
+5. Run the following command:
 
 ```bash
-java -jar Tool_CheckCardFileStructure.jar
+java -jar Tool_CheckCardFileStructure.jar <json_file_name> [readerNameRegex]
 ```
 
-The tools will read the card and perform their respective functions. The Calypso Card Analyzer tool will generate a JSON
-report containing the card's structure and application data, while the Calypso Card File Structure Checker tool will
-check the file structure of the card against a given JSON file containing the expected file structure.
+Replace `<json_file_name>` with the name of the JSON file containing the reference file structure.
+
+The `readerNameRegex` parameter is optional and can be used to specify a regular expression for selecting the card reader
+to use. If this parameter is not provided, the tool will use the following
+expression `.*(ASK.*|Identiv.*2|ACS ACR122U|SCR3310).*`.
+
+For example, if you want to use the `TestKit_CalypsoPrimeRegularProfile_v3.json` card profile provided in
+the `card_profiles` directory, you can run the following command:
+
+```bash
+java -jar Tool_CheckCardFileStructure.jar card_profiles/TestKit_CalypsoPrimeRegularProfile_v3.json
+```
+
+The tool will then read the reference file structure from the specified JSON file, check if a card is present in the
+reader, and perform the necessary checks. The verification results will be displayed in the console.
 
 ### Dependencies
 
@@ -109,4 +139,4 @@ more information.
 
 ### Copyright
 
-Copyright (c) 2024 Calypso Networks Association
+Copyright (c) 2024 [Calypso Networks Association](https://calypsonet.org)

@@ -89,3 +89,9 @@ tasks {
         from(sourcesMain.output)
     }
 }
+
+afterEvaluate {
+    tasks.named("build").configure {
+        dependsOn(tasks.named("fatJarAnalyze"), tasks.named("fatJarCheck"))
+    }
+}
