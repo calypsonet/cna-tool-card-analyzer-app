@@ -65,7 +65,7 @@ public class Tool_AnalyzeCardFileStructure {
     cardTransactionManager.prepareSelectFile(SelectFileControl.FIRST_EF);
     try {
       cardTransactionManager.processCommands(ChannelControl.KEEP_OPEN);
-    } catch (UnexpectedCommandStatusException e) {
+    } catch (UnexpectedCommandStatusException | SelectFileException e) {
       return;
     }
 
@@ -81,7 +81,7 @@ public class Tool_AnalyzeCardFileStructure {
       cardTransactionManager.prepareSelectFile(SelectFileControl.NEXT_EF);
       try {
         cardTransactionManager.processCommands(ChannelControl.KEEP_OPEN);
-      } catch (SelectFileException e) {
+      } catch (UnexpectedCommandStatusException | SelectFileException e) {
         return;
       }
 
@@ -148,9 +148,9 @@ public class Tool_AnalyzeCardFileStructure {
     cardTransactionManager =
         calypsoCardService
             .getCalypsoCardApiFactory()
-            .createFreeTransactionManager(cardReader, selectedApplication);
-    cardTransactionManager.prepareSelectFile(SelectFileControl.CURRENT_DF);
-    cardTransactionManager.processCommands(ChannelControl.KEEP_OPEN);
+            .createFreeTransactionManager(cardReader, selectedApplication)
+            .prepareSelectFile(SelectFileControl.CURRENT_DF)
+            .processCommands(ChannelControl.KEEP_OPEN);
 
     // Get and fill the Application file information
     CardApplicationData cardAppData = new CardApplicationData(selectedApplication);
@@ -182,7 +182,8 @@ public class Tool_AnalyzeCardFileStructure {
       CalypsoCardSelectionExtension calypsoCardSelectionExtension =
           CalypsoExtensionService.getInstance()
               .getCalypsoCardApiFactory()
-              .createCalypsoCardSelectionExtension();
+              .createCalypsoCardSelectionExtension()
+              .acceptInvalidatedCard();
 
       cardSelectionManager.prepareSelection(isoCardSelector, calypsoCardSelectionExtension);
 
@@ -196,9 +197,9 @@ public class Tool_AnalyzeCardFileStructure {
         cardTransactionManager =
             calypsoCardService
                 .getCalypsoCardApiFactory()
-                .createFreeTransactionManager(cardReader, calypsoCard);
-        cardTransactionManager.prepareGetData(GetDataTag.TRACEABILITY_INFORMATION);
-        cardTransactionManager.processCommands(ChannelControl.KEEP_OPEN);
+                .createFreeTransactionManager(cardReader, calypsoCard)
+                .prepareGetData(GetDataTag.TRACEABILITY_INFORMATION)
+                .processCommands(ChannelControl.KEEP_OPEN);
 
         return calypsoCard.getTraceabilityInformation();
       }
@@ -277,8 +278,8 @@ public class Tool_AnalyzeCardFileStructure {
           new CardStructureData(
               traceabilityInfo, SOFTWARE_INFORMATION, new Date(), 2, SOFTWARE_NAME);
 
-      for (String s : aidList) {
-        getApplicationsData(s, cardStructureData.getApplicationList());
+      for (String aid : aidList) {
+        getApplicationsData(aid, cardStructureData.getApplicationList());
       }
 
       try {
