@@ -148,9 +148,10 @@ public class Tool_AnalyzeCardFileStructure {
     cardTransactionManager =
         calypsoCardService
             .getCalypsoCardApiFactory()
-            .createFreeTransactionManager(cardReader, selectedApplication)
-            .prepareSelectFile(SelectFileControl.CURRENT_DF)
-            .processCommands(ChannelControl.KEEP_OPEN);
+            .createFreeTransactionManager(cardReader, selectedApplication);
+    cardTransactionManager
+        .prepareSelectFile(SelectFileControl.CURRENT_DF)
+        .processCommands(ChannelControl.KEEP_OPEN);
 
     // Get and fill the Application file information
     CardApplicationData cardAppData = new CardApplicationData(selectedApplication);
@@ -197,9 +198,10 @@ public class Tool_AnalyzeCardFileStructure {
         cardTransactionManager =
             calypsoCardService
                 .getCalypsoCardApiFactory()
-                .createFreeTransactionManager(cardReader, calypsoCard)
-                .prepareGetData(GetDataTag.TRACEABILITY_INFORMATION)
-                .processCommands(ChannelControl.KEEP_OPEN);
+                .createFreeTransactionManager(cardReader, calypsoCard);
+        cardTransactionManager
+            .prepareGetData(GetDataTag.TRACEABILITY_INFORMATION)
+            .processCommands(ChannelControl.KEEP_OPEN);
 
         return calypsoCard.getTraceabilityInformation();
       }
