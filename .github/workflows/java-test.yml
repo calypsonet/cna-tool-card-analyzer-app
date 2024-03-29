@@ -1,4 +1,4 @@
-name: Compile and Test Java Api
+name: Compile and Test
 
 on:
   pull_request:
