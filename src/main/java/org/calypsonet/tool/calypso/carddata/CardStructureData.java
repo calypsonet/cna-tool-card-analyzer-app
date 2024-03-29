@@ -49,7 +49,7 @@ public class CardStructureData {
 
     infos = softwareInfo;
 
-    date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(creationDate.getTime()));
+    date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(creationDate);
 
     version = softwareVersion;
 

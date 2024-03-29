@@ -43,7 +43,7 @@ public class CardFileData {
 
   private final AccessConditions accessConditions;
 
-  private final List<RecordData> recordData;
+  private final List<RecordData> recordDataList;
 
   public CardFileData(ElementaryFile fileInfo) {
 
@@ -67,7 +67,7 @@ public class CardFileData {
         new AccessConditions(
             fileInfo.getHeader().getAccessConditions(), fileInfo.getHeader().getKeyIndexes());
 
-    recordData = new ArrayList<>();
+    recordDataList = new ArrayList<>();
 
     ref = HexUtil.toHex(fileInfo.getHeader().getSharedReference());
   }
@@ -108,8 +108,8 @@ public class CardFileData {
     return ref;
   }
 
-  public List<RecordData> getRecordData() {
-    return recordData;
+  public List<RecordData> getRecordDataList() {
+    return recordDataList;
   }
 
   public void print(Logger logger) {
@@ -148,11 +148,10 @@ public class CardFileData {
         group3,
         this.getDataRef());
 
-    for (int i = 0; this.getRecordData() != null && i < this.getRecordData().size(); i++) {
-      logger.info(
-          "+ #{}:{}",
-          this.getRecordData().get(i).getIndex(),
-          HexUtil.toHex(this.getRecordData().get(i).getValue()));
+    if (getRecordDataList() != null) {
+      for (RecordData recordData : getRecordDataList()) {
+        logger.info("+ #{}:{}", recordData.getIndex(), HexUtil.toHex(recordData.getValue()));
+      }
     }
   }
 }

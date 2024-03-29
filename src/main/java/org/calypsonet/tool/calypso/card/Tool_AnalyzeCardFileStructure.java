@@ -107,7 +107,7 @@ public class Tool_AnalyzeCardFileStructure {
             .processCommands(ChannelControl.KEEP_OPEN);
 
         fileData
-            .getRecordData()
+            .getRecordDataList()
             .add((new RecordData(i + 1, selectedFile.getData().getContent((i + 1)))));
       }
     }
