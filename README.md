@@ -75,7 +75,7 @@ After running this command, the JARs will be generated in the `build/libs` direc
 To use the Calypso Card Analyzer JAR, follow these steps:
 
 1. Download the Calypso Card Analyzer JAR from
-   the [releases](https://github.com/CalypsoNetworksAssociation/calypso-card-analysis-tools/releases) page of this
+   the [releases](https://github.com/calypsonet/calypso-card-analyzer/releases/) page of this
    repository.
 2. Connect a PC/SC card reader to your computer.
 3. Insert a Calypso card into the reader.
@@ -98,7 +98,7 @@ application data.
 To use the Calypso Card File Structure Checker JAR, follow these steps:
 
 1. Download the Calypso Card File Structure Checker JAR from
-   the [releases](https://github.com/CalypsoNetworksAssociation/calypso-card-analysis-tools/releases) page of this
+   the [releases](https://github.com/calypsonet/calypso-card-analyzer/releases/) page of this
    repository.
 2. Connect a PC/SC card reader to your computer.
 3. Insert a Calypso card into the reader.
