@@ -1,5 +1,5 @@
 /* **************************************************************************************
- * Copyright (c) 2019 Calypso Networks Association https://calypsonet.org/
+ * Copyright (c) 2024 Calypso Networks Association https://calypsonet.org/
  *
  * See the NOTICE file(s) distributed with this work for additional information
  * regarding copyright ownership.
@@ -9,25 +9,31 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  ************************************************************************************** */
-package org.cna.keyple.tool.calypso.carddata;
+package org.calypsonet.tool.calypso.carddata;
 
-import org.cna.keyple.tool.calypso.common.ToolUtils;
+import org.calypsonet.tool.calypso.common.ToolUtils;
+import org.eclipse.keyple.core.util.HexUtil;
 
 public class AccessConditions {
 
+  /**
+   * Access conditions parameters.
+   *
+   * @since 2.0.0
+   */
   public class AccessCondition {
 
-    private String accessCondition;
+    private final String accessCondition;
 
-    private String keyLevel;
+    private final String keyLevel;
 
-    private String description;
+    private final String description;
 
     public AccessCondition(byte inAc, byte inKl) {
 
-      accessCondition = String.format("%02X", inAc);
+      accessCondition = HexUtil.toHex(inAc);
 
-      keyLevel = String.format("%02X", inKl);
+      keyLevel = HexUtil.toHex(inKl);
 
       description = ToolUtils.getAcName(accessCondition, keyLevel, true);
     }
@@ -45,13 +51,13 @@ public class AccessConditions {
     }
   }
 
-  private AccessCondition group0;
+  private final AccessCondition group0;
 
-  private AccessCondition group1;
+  private final AccessCondition group1;
 
-  private AccessCondition group2;
+  private final AccessCondition group2;
 
-  private AccessCondition group3;
+  private final AccessCondition group3;
 
   public AccessConditions(byte[] accessConditions, byte[] keyLevels) {
 
