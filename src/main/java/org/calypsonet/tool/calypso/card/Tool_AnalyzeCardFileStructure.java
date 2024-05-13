@@ -201,7 +201,7 @@ public class Tool_AnalyzeCardFileStructure {
                 .createFreeTransactionManager(cardReader, calypsoCard);
         cardTransactionManager
             .prepareGetData(GetDataTag.TRACEABILITY_INFORMATION)
-            .processCommands(ChannelControl.KEEP_OPEN);
+            .processCommands(ChannelControl.CLOSE_AFTER);
 
         return calypsoCard.getTraceabilityInformation();
       }
@@ -258,6 +258,7 @@ public class Tool_AnalyzeCardFileStructure {
       // SV -, - GEN AID -
       List<String> aidList =
           Arrays.asList(
+              "A0000004040125009101",
               "A000000291FF91",
               "A000000291FF92",
               "A000000291A000000191",
