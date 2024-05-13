@@ -201,9 +201,7 @@ public class Tool_AnalyzeCardFileStructure {
                 .createFreeTransactionManager(cardReader, calypsoCard);
         cardTransactionManager
             .prepareGetData(GetDataTag.TRACEABILITY_INFORMATION)
-            .processCommands(
-                ChannelControl
-                    .KEEP_OPEN); // FIXME Check if CLOSE_AFTER is needed here (Android NFC)
+            .processCommands(ChannelControl.KEEP_OPEN);
 
         return calypsoCard.getTraceabilityInformation();
       }
@@ -260,6 +258,7 @@ public class Tool_AnalyzeCardFileStructure {
       // SV -, - GEN AID -
       List<String> aidList =
           Arrays.asList(
+              "A0000004040125009101",
               "A000000291FF91",
               "A000000291FF92",
               "A000000291A000000191",
@@ -268,8 +267,6 @@ public class Tool_AnalyzeCardFileStructure {
               "315449432E",
               "304554502E",
               "A000000291");
-      // Arrays.asList("A000000291FF91", "A000000291FF92", "A000000291A000000191", "D276000085",
-      // "334D54522E", "315449432E", "304554502E");
 
       byte[] traceabilityInfo = getTraceabilityInfo(aidList);
 

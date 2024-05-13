@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.0.1] - 2024-05-14
+### Fixed
+- Hex/dec conversion issue in card check procedure.
 ### Upgraded
 - Keypop Reader API `2.0.0` -> `2.0.1`
 - Keypop Calypso Card API `2.0.0` -> `2.1.0`
@@ -28,5 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - CI/CD: Added a GitHub action that builds and tests the code on every push to the repository.
 
-[unreleased]: https://github.com/calypsonet/calypso-card-analyzer/compare/2.0.0...HEAD
+[unreleased]: https://github.com/calypsonet/calypso-card-analyzer/compare/2.0.1...HEAD
+[2.0.1]: https://github.com/calypsonet/calypso-card-analyzer/compare/2.0.1...2.0.0
 [2.0.0]: https://github.com/calypsonet/calypso-card-analyzer/releases/tag/2.0.0
