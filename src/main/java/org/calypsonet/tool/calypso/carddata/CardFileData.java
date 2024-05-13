@@ -49,7 +49,7 @@ public class CardFileData {
 
     int efTypeValue = ToolUtils.getEfTypeIntValue(fileInfo.getHeader().getEfType());
 
-    lid = HexUtil.toHex(fileInfo.getHeader().getLid());
+    lid = ToolUtils.padLeft(HexUtil.toHex(fileInfo.getHeader().getLid()), 4, '0');
 
     sfi = HexUtil.toHex(fileInfo.getSfi());
 
@@ -59,7 +59,7 @@ public class CardFileData {
 
     numRecDec = fileInfo.getHeader().getRecordsNumber();
 
-    recSize = ToolUtils.padLeft(String.valueOf(fileInfo.getHeader().getRecordSize()), 4, '0');
+    recSize = ToolUtils.padLeft(HexUtil.toHex(fileInfo.getHeader().getRecordSize()), 4, '0');
 
     recSizeDec = fileInfo.getHeader().getRecordSize();
 
@@ -69,7 +69,7 @@ public class CardFileData {
 
     recordDataList = new ArrayList<>();
 
-    ref = HexUtil.toHex(fileInfo.getHeader().getSharedReference());
+    ref = ToolUtils.padLeft(HexUtil.toHex(fileInfo.getHeader().getSharedReference()), 4, '0');
   }
 
   public String getLid() {
