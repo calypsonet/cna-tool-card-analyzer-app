@@ -201,7 +201,9 @@ public class Tool_AnalyzeCardFileStructure {
                 .createFreeTransactionManager(cardReader, calypsoCard);
         cardTransactionManager
             .prepareGetData(GetDataTag.TRACEABILITY_INFORMATION)
-            .processCommands(ChannelControl.KEEP_OPEN);
+            .processCommands(
+                ChannelControl
+                    .KEEP_OPEN); // FIXME Check if CLOSE_AFTER is needed here (Android NFC)
 
         return calypsoCard.getTraceabilityInformation();
       }
