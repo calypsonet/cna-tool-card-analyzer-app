@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.2] - 2024-06-18
+### Fixed
+- Accept cards returning a failing status word when getting non-mandatory Traceability Information tag.
+### Upgraded
+- Keyple Service Library `3.2.1` -> `3.2.2`
+
 ## [2.0.1] - 2024-05-14
 ### Fixed
 - Hex/dec conversion issue in card check procedure.
@@ -32,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - CI/CD: Added a GitHub action that builds and tests the code on every push to the repository.
 
-[unreleased]: https://github.com/calypsonet/calypso-card-analyzer/compare/2.0.1...HEAD
+[unreleased]: https://github.com/calypsonet/calypso-card-analyzer/compare/2.0.2...HEAD
+[2.0.2]: https://github.com/calypsonet/calypso-card-analyzer/compare/2.0.1...2.0.2
 [2.0.1]: https://github.com/calypsonet/calypso-card-analyzer/compare/2.0.1...2.0.0
 [2.0.0]: https://github.com/calypsonet/calypso-card-analyzer/releases/tag/2.0.0

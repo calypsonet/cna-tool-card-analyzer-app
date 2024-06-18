@@ -199,9 +199,13 @@ public class Tool_AnalyzeCardFileStructure {
             calypsoCardService
                 .getCalypsoCardApiFactory()
                 .createFreeTransactionManager(cardReader, calypsoCard);
-        cardTransactionManager
-            .prepareGetData(GetDataTag.TRACEABILITY_INFORMATION)
-            .processCommands(ChannelControl.KEEP_OPEN);
+        try {
+          cardTransactionManager
+              .prepareGetData(GetDataTag.TRACEABILITY_INFORMATION)
+              .processCommands(ChannelControl.KEEP_OPEN);
+        } catch (UnexpectedCommandStatusException e) {
+          logger.warn("Traceability information tag not available: {}", e.getMessage());
+        }
 
         return calypsoCard.getTraceabilityInformation();
       }
