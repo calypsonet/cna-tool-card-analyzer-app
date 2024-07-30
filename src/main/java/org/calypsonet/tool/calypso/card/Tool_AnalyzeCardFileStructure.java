@@ -25,6 +25,7 @@ import org.eclipse.keyple.card.calypso.CalypsoExtensionService;
 import org.eclipse.keyple.core.service.Plugin;
 import org.eclipse.keyple.core.service.SmartCardService;
 import org.eclipse.keyple.core.service.SmartCardServiceProvider;
+import org.eclipse.keyple.core.util.HexUtil;
 import org.eclipse.keyple.plugin.pcsc.PcscPluginFactoryBuilder;
 import org.eclipse.keyple.plugin.pcsc.PcscReader;
 import org.eclipse.keypop.calypso.card.GetDataTag;
@@ -59,6 +60,7 @@ public class Tool_AnalyzeCardFileStructure {
   private static final String SOFTWARE_NAME = "Calypso Card Analyzer";
   private static CardReader cardReader;
   private static FreeTransactionManager cardTransactionManager;
+  private static byte[] lastFci;
 
   private static void fillFilesTable(CalypsoCard selectedApp) {
 
@@ -115,9 +117,8 @@ public class Tool_AnalyzeCardFileStructure {
     return fileData;
   }
 
-  private static CardApplicationData getApplicationData(
-      CommonIsoCardSelector.FileOccurrence fileOccurrence, String aid) {
-
+  private static CalypsoCard selectApplication(
+      String aid, CommonIsoCardSelector.FileOccurrence fileOccurrence) {
     CardSelectionManager cardSelectionManager =
         smartCardService.getReaderApiFactory().createCardSelectionManager();
 
@@ -139,11 +140,13 @@ public class Tool_AnalyzeCardFileStructure {
     CardSelectionResult selectionResult =
         cardSelectionManager.processCardSelectionScenario(cardReader);
 
-    if (selectionResult.getActiveSmartCard() == null) {
-      return null;
-    }
+    return (CalypsoCard) selectionResult.getActiveSmartCard();
+  }
 
-    CalypsoCard selectedApplication = (CalypsoCard) selectionResult.getActiveSmartCard();
+  private static CardApplicationData getApplicationData(String aid) {
+
+    CalypsoCard selectedApplication =
+        selectApplication(aid, CommonIsoCardSelector.FileOccurrence.FIRST);
 
     cardTransactionManager =
         calypsoCardService
@@ -167,12 +170,12 @@ public class Tool_AnalyzeCardFileStructure {
     return cardAppData;
   }
 
-  public static byte[] getTraceabilityInfo(List<String> aidList) {
+  public static byte[] getTraceabilityInfo(List<String> aidPrefixList) {
 
     CardSelectionManager cardSelectionManager =
         smartCardService.getReaderApiFactory().createCardSelectionManager();
 
-    for (String currentAid : aidList) {
+    for (String currentAid : aidPrefixList) {
 
       IsoCardSelector isoCardSelector =
           SmartCardServiceProvider.getService()
@@ -214,14 +217,19 @@ public class Tool_AnalyzeCardFileStructure {
     return null; // NOSONAR
   }
 
-  public static void getApplicationsData(String aid, List<CardApplicationData> cardAppDataList) {
+  public static void getApplicationsData(
+      String aidPrefix, List<CardApplicationData> cardAppDataList) {
+    List<String> aids = new ArrayList<>();
 
-    CardApplicationData cardAppData =
-        getApplicationData(CommonIsoCardSelector.FileOccurrence.FIRST, aid);
+    CalypsoCard calypsoCard =
+        selectApplication(aidPrefix, CommonIsoCardSelector.FileOccurrence.FIRST);
+    while (calypsoCard != null) {
+      aids.add(HexUtil.toHex(calypsoCard.getDfName()));
+      calypsoCard = selectApplication(aidPrefix, CommonIsoCardSelector.FileOccurrence.NEXT);
+    }
 
-    while (cardAppData != null) {
-      cardAppDataList.add(cardAppData);
-      cardAppData = getApplicationData(CommonIsoCardSelector.FileOccurrence.NEXT, aid);
+    for (String aid : aids) {
+      cardAppDataList.add(getApplicationData(aid));
     }
   }
 
@@ -260,7 +268,7 @@ public class Tool_AnalyzeCardFileStructure {
 
       // - GEN RT TEST (91h) - , - GEN SV TEST (92h) - , - Hoplink -, - Ndef -,  - MF -, - RT -, -
       // SV -, - GEN AID -
-      List<String> aidList =
+      List<String> aidPrefixList =
           Arrays.asList(
               "A0000004040125009101",
               "A000000291FF91",
@@ -272,7 +280,7 @@ public class Tool_AnalyzeCardFileStructure {
               "304554502E",
               "A000000291");
 
-      byte[] traceabilityInfo = getTraceabilityInfo(aidList);
+      byte[] traceabilityInfo = getTraceabilityInfo(aidPrefixList);
 
       if (traceabilityInfo == null) {
         logger.info("No applications found.");
@@ -283,8 +291,8 @@ public class Tool_AnalyzeCardFileStructure {
           new CardStructureData(
               traceabilityInfo, SOFTWARE_INFORMATION, new Date(), 2, SOFTWARE_NAME);
 
-      for (String aid : aidList) {
-        getApplicationsData(aid, cardStructureData.getApplicationList());
+      for (String aidPrefix : aidPrefixList) {
+        getApplicationsData(aidPrefix, cardStructureData.getApplicationList());
       }
 
       try {
